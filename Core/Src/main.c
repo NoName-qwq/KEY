@@ -18,8 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "Key.h"
-#include "OLED_SSD1306.h"
 #include "i2c.h"
 #include "tim.h"
 #include "usart.h"
@@ -107,10 +105,13 @@ int main(void)
   MX_TIM3_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+//OLED初始化==========================
   OLED_Init();
   OLED_NewFrame();
+//KEY初始化==========================
   HAL_TIM_Base_Start_IT(&htim3);
-  uint16_t Key1_Number,Key2_Number;
+  uint16_t Key1_Number,Key0_Number;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,36 +119,61 @@ int main(void)
   while (1)
   {
     OLED_NewFrame();
-    // 测试1 HOLD
-    // if (Key_CheckFlag(KEY_HOLD)) {  
+
+    // // 测试1 HOLD
+    // if (Key_CheckFlag(0,KEY_HOLD)) {  
+    //   Key0_Number = 1;
+    // }else {
+    //   Key0_Number = 0;
+    // }
+    // if (Key_CheckFlag(1,KEY_HOLD)) {  
     //   Key1_Number = 1;
     // }else {
     //   Key1_Number = 0;
     // }
+    
 
-    // 测试2
-    // if (Key_CheckFlag(KEY_DOWN)) {
+    // // 测试2 DOWN&UP
+    // if (Key_CheckFlag(0,KEY_DOWN)) {
+    //   Key0_Number ++;
+    // }else if (Key_CheckFlag(0,KEY_UP)) {
     //   Key1_Number ++;
-    // }else if (Key_CheckFlag(KEY_UP)) {
-    //   Key2_Number ++;
+    // }
+    // if (Key_CheckFlag(1,KEY_DOWN)) {
+    //   Key0_Number ++;
+    // }else if (Key_CheckFlag(1,KEY_UP)) {
+    //   Key1_Number ++;
     // }
 
-    // 测试3
-    // if (Key_CheckFlag(KEY_SINGLE)) {
+    // // 测试3 SINGLE&DOUBLE&LONG
+    // if (Key_CheckFlag(0,KEY_SINGLE)) {
+    //   Key0_Number ++;
+    // }else if (Key_CheckFlag(0,KEY_DOUBLE)) {
+    //   Key0_Number += 100;
+    // }else if (Key_CheckFlag(0,KEY_LONG)) {
+    //   Key0_Number = 0;
+    // }
+    // if (Key_CheckFlag(1,KEY_SINGLE)) {
     //   Key1_Number ++;
-    // }else if (Key_CheckFlag(KEY_DOUBLE)) {
+    // }else if (Key_CheckFlag(1,KEY_DOUBLE)) {
     //   Key1_Number += 100;
-    // }else if (Key_CheckFlag(KEY_LONG)) {
+    // }else if (Key_CheckFlag(1,KEY_LONG)) {
     //   Key1_Number = 0;
     // }
 
-    // 测试4
-    if (Key_CheckFlag(KEY_SINGLE) || Key_CheckFlag(KEY_REPEAT)) {
-      Key1_Number ++;
-    }
+    // // 测试4
+    // if (Key_CheckFlag(0,KEY_SINGLE) || Key_CheckFlag(0,KEY_REPEAT)) {
+    //   Key0_Number ++;
+    // }
+    // if (Key_CheckFlag(1,KEY_SINGLE) || Key_CheckFlag(1,KEY_REPEAT)) {
+    //   Key0_Number --;
+    // }
 
-    OLED_ShowNum(0, 0, Key1_Number, 5, 8);
-    OLED_ShowNum(0, 15, Key2_Number, 5, 8);
+    OLED_PrintString(0, 0, "TEST: multi key", 8);
+    OLED_PrintString(0, 15, "Key0:", 8);
+    OLED_ShowNum(56, 15, Key0_Number, 5, 8);
+    OLED_PrintString(0, 31, "Key1:", 8);
+    OLED_ShowNum(56, 31, Key1_Number, 5, 8);
 
     OLED_ShowFrame();
 
